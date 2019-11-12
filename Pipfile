@@ -6,12 +6,22 @@ verify_ssl = true
 [dev-packages]
 pylint = "*"
 autopep8 = "*"
+rope = "*"
+pytest = "*"
+pytest-flask = "*"
+pytest-cov = "*"
 
 [packages]
 flask = "*"
 flask-restplus = "*"
 flask-migrate = "*"
 python-dotenv = "*"
+flask-sqlalchemy = "*"
+psycopg2-binary = "*"
+marshmallow-sqlalchemy = "*"
+bcrypt = "*"
+pyjwt = "*"
+flask-mail = "*"
 
 [requires]
 python_version = "3.7"

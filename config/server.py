@@ -1,6 +1,9 @@
+""" Module for Server configuration """
+
 from flask import Flask, Blueprint
 from flask_restplus import Api
-from config.environment import environment
+from flask_mail import Mail
+from config.environment import AppConfig
 
 api_blueprint = Blueprint('api_blueprint', __name__, url_prefix='/api/v1')
 authorizations = {
@@ -16,15 +19,19 @@ api = Api(
     title='E-Commerce API',
     description='Online shopping API',
     security='Token Auth',
-    doc=environment['swagger-url'],
+    doc='/documentation',
     authorizations=authorizations)
 
 
-def create_app():
-    application = Flask(__name__)
-    application.register_blueprint(api_blueprint)
+def create_app(config=AppConfig):
+    """ Create the flask application """
 
-    return application
+    app = Flask(__name__, template_folder='../templates')
+    app.config.from_object(config)
+    app.register_blueprint(api_blueprint)
+
+    return app
 
 
 application = create_app()
+mail = Mail(application)

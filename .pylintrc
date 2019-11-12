@@ -1,0 +1,2 @@
+[MESSAGES CONTROL]
+disable = no-member, invalid-name, bare-except, unused-import, unused-argument

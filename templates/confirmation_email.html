@@ -1,0 +1,16 @@
+<div style="background-color:#f1f1f1;margin:20px;padding:20px;font-size:19px;width:50%;margin:auto;">
+  <p>
+    Hello {{ user.firstname }},<br /><br />
+    We’re excited you decided to join us. we’re here to help you make your
+    online shopping very exciting. Please click the link below to activate your
+    account
+  </p>
+
+  <a
+    style="display:inline-block;text-decoration:none;margin:10px 0;background-color:#4CAF50;padding:10px;color:#fff"
+    href="{{ url_for('api_blueprint.Users_user_activate_resource', token=token, _external=True) }}"
+    >Activate</a
+  >
+
+  <p>Thank you for choosing us!</p>
+</div>
