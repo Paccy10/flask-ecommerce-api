@@ -1,0 +1,22 @@
+language: python
+python:
+  - '3.7'
+# command to install dependencies
+install:
+  - pip install -r requirements.txt
+  - pip install codeclimate-test-reporter
+
+services:
+  - postgresql
+
+before_script:
+  - psql -c 'create database arrows_test_db;' -U postgres
+
+addons:
+  code_climate:
+    repo_token:
+      secure: 'eRyuRQwx05fcO7KGuhphBfxWc4BkCvhg7q2wyC+CeWDolbWv53YWch5RhHoE75GOeglt80DKnVtxQdplYXxT6QLHbRKABEMB70tuFaX1zyZ70Acm8q70PLtetC+8S/uh0GKjhRxJFdE+xEn2+5RRLPRhu03iApsMTbYVhWIcr+dAk39coI4fFgJrXwiZFc1vBftSPZ1nNThIGIa76DU7ylGhEjwtvyxky7XXbmVGv18RS/tApa0RywnI0Vse5URnTTM4q9Nl+gC3xBRyYzFzd4opjvbj/ZjJ1T7pnYhACazR+zZ93GaSiFrPqXoHdtuPTzkvBr7nxRpJRk9KPIDB2SgsmwStSvk5fSswU4kgbOVOkf5i37NZGFM8GcMVBrPyI8eM9FupeyF4YEtg1oZiMWYFwJwwKYhQzp3Hz5luyBzLqcVlSxcC958jEluKC6M3ISZTOt/MWn1ZkBrE2rUqHx23s8eHcosQQ1AEOGY3ULxbFg04K6MMG0JCaRJ5JSSax8xTTSvFwv8j9sCwiRl5TTnYZXEuUnNVafdbDZdlz/NF6otpqtAo2xO0+y5OxmNuJY5eKAqZtrBjhK8ZXpAVZkDQ8nZZ5mB+6XiYQldUPITXSEipbNHpAGQvhkXxDmpYaa8ON1L46YtTNPqZRwbM5D8Q9gTnkcl9YDvj4hqh5GM='
+
+script:
+  - pytest
+  - codeclimate-test-reporter --file .coverage
