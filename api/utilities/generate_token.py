@@ -61,4 +61,4 @@ def verify_user_token(token):
     except:
         return None
 
-    return User.query.get(user_id)
+    return User.find_by_id(user_id)

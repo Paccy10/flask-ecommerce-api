@@ -3,7 +3,6 @@
 from flask import render_template
 from flask_mail import Message
 from config.server import mail
-from flask import url_for
 from .generate_token import generate_user_token
 
 
