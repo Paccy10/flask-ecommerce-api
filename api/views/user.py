@@ -59,19 +59,51 @@ class UserActivateResource(Resource):
             error_response['message'] = 'Account activation token is invalid'
             return error_response, 400
 
+        if user.is_activated:
+            error_response['message'] = 'User account already activated'
+            return error_response, 400
+
         user.update({'is_activated': True})
 
-        excluded = EXCLUDED_FIELDS.copy()
-        excluded.append('password')
-        user_schema = UserSchema(exclude=excluded)
-        user_data = user_schema.dump(user)
+        return {
+            'status': 'success',
+            'message': 'User successfully activated'
+        }, 200
 
-        token = generate_auth_token(user_data)
 
-        success_response['message'] = 'User successfully activated'
-        success_response['data'] = {
-            'token': token,
-            'user': user_data
-        }
+@user_namespace.route('/login')
+class UserLoginResource(Resource):
+    """" Resource class for user login endpoint """
 
-        return success_response, 200
+    def post(self):
+        """ Endpoint to login the user """
+
+        request_data = request.get_json()
+        request_data = request_data_strip(request_data)
+
+        email = request_data['email']
+        password = bytes(request_data['password'], encoding='utf-8')
+        user = User.query.filter(
+            User.email == email, User.is_activated).first()
+        error_response['message'] = 'Incorrect username or password'
+        user_schema = UserSchema()
+
+        if user:
+            user_data = user_schema.dump(user)
+            hashed = bytes(user_data['password'], encoding='utf-8')
+
+            if bcrypt.checkpw(password, hashed):
+                excluded = EXCLUDED_FIELDS.copy()
+                excluded.append('password')
+                user_schema = UserSchema(exclude=excluded)
+                logged_in_user = user_schema.dump(user)
+                token = generate_auth_token(logged_in_user)
+                success_response['message'] = 'User successfully logged in'
+                success_response['data'] = {
+                    'token': token,
+                    'user': logged_in_user
+                }
+
+                return success_response, 200
+            return error_response, 404
+        return error_response, 404

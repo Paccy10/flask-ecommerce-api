@@ -13,14 +13,17 @@ from tests.mocks.user import (
     INVALID_USER_WTH_PASSWORD_WITHOUT_CAPITAL_LETTER,
     INVALID_USER_WTH_PASSWORD_WITHOUT_SMALL_LETTER,
     INVALID_USER_WTH_PASSWORD_WITHOUT_DIGIT,
-    INVALID_USER_ALREADY_EXISTS)
+    INVALID_USER_ALREADY_EXISTS,
+    CORRECT_USER_LOGIN,
+    INCORRECT_USER_LOGIN,
+    INCORRECT_USER_LOGIN_WITH_INCORRECT_PASSWORD)
 from tests.constants import API_BASE_URL, CONTENT_TYPE
 import api.views.user
 from api.utilities.generate_token import generate_user_token
 
 
-class TestUserSignupEndpoint:
-    """ Class for testing user signup resource """
+class TestUserEndpoints:
+    """ Class for testing user signup and login resources """
 
     def test_user_signup_succeeds(self, client, init_db):
         """ Testing user signup """
@@ -158,41 +161,55 @@ class TestUserSignupEndpoint:
         assert response.json['status'] == 'error'
         assert response.json['message'] == message
 
-    def test_user_activation_succeeds(self, client, new_user):
-        """ Testing User activation """
+    def test_user_login_succeeds(self, client, init_db):
+        """ Testing user login """
 
-        new_user.save()
-        token = generate_user_token(new_user.id)
+        user_data = json.dumps(CORRECT_USER_LOGIN)
+        token = generate_user_token(1)
         response = client.get(
             f'{API_BASE_URL}/auth/activate/{token}')
+        response2 = client.post(
+            f'{API_BASE_URL}/auth/login', data=user_data, content_type=CONTENT_TYPE)
 
-        assert response.status_code == 200
-        assert response.json['status'] == 'success'
-        assert response.json['message'] == 'User successfully activated'
-        assert 'token' in response.json['data']
-        assert 'user' in response.json['data']
-        assert response.json['data']['user']['email'] == new_user.email
+        message = 'User successfully logged in'
 
-    def test_user_activation_with_invalid_token_fails(self, client):
-        """ Testing User activation with invalid token """
+        assert response2.status_code == 200
+        assert response2.json['status'] == 'success'
+        assert response2.json['message'] == message
+        assert 'token' in response2.json['data']
+        assert 'user' in response2.json['data']
+        assert response2.json['data']['user']['email'] == CORRECT_USER_LOGIN['email']
 
-        token = generate_user_token(5)
+    def test_user_login_with_incorrect_email_fails(self, client, init_db):
+        """ Testing user login with incorrect email """
+
+        user_data = json.dumps(INCORRECT_USER_LOGIN)
+        token = generate_user_token(1)
         response = client.get(
             f'{API_BASE_URL}/auth/activate/{token}')
+        response2 = client.post(
+            f'{API_BASE_URL}/auth/login', data=user_data, content_type=CONTENT_TYPE)
+        print(response2.json)
 
-        assert response.status_code == 400
-        assert response.json['status'] == 'error'
-        assert response.json['message'] == 'Account activation token is invalid'
+        message = 'Incorrect username or password'
 
-    def test_user_activation_with_expired_token_fails(self, client, new_user):
-        """ Testing User activation with expired token """
+        assert response2.status_code == 404
+        assert response2.json['status'] == 'error'
+        assert response2.json['message'] == message
 
-        new_user.save()
-        token = generate_user_token(new_user.id, expires_sec=0)
-        time.sleep(1)
+    def test_user_login_with_incorrect_password_fails(self, client, init_db):
+        """ Testing user login with incorrect password """
+
+        user_data = json.dumps(INCORRECT_USER_LOGIN_WITH_INCORRECT_PASSWORD)
+        token = generate_user_token(1)
         response = client.get(
             f'{API_BASE_URL}/auth/activate/{token}')
+        response2 = client.post(
+            f'{API_BASE_URL}/auth/login', data=user_data, content_type=CONTENT_TYPE)
+        print(response2.json)
 
-        assert response.status_code == 400
-        assert response.json['status'] == 'error'
-        assert response.json['message'] == 'Account activation token is invalid'
+        message = 'Incorrect username or password'
+
+        assert response2.status_code == 404
+        assert response2.json['status'] == 'error'
+        assert response2.json['message'] == message

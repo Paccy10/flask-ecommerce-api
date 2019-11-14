@@ -76,3 +76,18 @@ INVALID_USER_ALREADY_EXISTS = {
     "email": "pacifique.ndayisenga@andela.com",
     "password": "Password1234"
 }
+
+CORRECT_USER_LOGIN = {
+    "email": "ndayisengacpac@gmail.com",
+    "password": "Password1234"
+}
+
+INCORRECT_USER_LOGIN_WITH_INCORRECT_PASSWORD = {
+    "email": "ndayisengacpac@gmail.com",
+    "password": "Password12345"
+}
+
+INCORRECT_USER_LOGIN = {
+    "email": "pacifique.ndayisenga@andela.com",
+    "password": "Password1234"
+}
