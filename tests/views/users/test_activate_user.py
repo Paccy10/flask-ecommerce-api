@@ -46,17 +46,15 @@ class TestUserActivationEndpoint:
         assert response.json['status'] == 'error'
         assert response.json['message'] == 'Account activation token is invalid'
 
-    def test_user_activation_already_activated_fails(self, client, new_user):
+    def test_user_activation_already_activated_fails(self, client, new_activated_user):
         """ Testing User activation already activated """
 
-        new_user.save()
-        token = generate_user_token(new_user.id)
+        new_activated_user.save()
+        token = generate_user_token(new_activated_user.id)
+
         response = client.get(
             f'{API_BASE_URL}/auth/activate/{token}')
 
-        response2 = client.get(
-            f'{API_BASE_URL}/auth/activate/{token}')
-
-        assert response2.status_code == 400
-        assert response2.json['status'] == 'error'
-        assert response2.json['message'] == 'User account already activated'
+        assert response.status_code == 400
+        assert response.json['status'] == 'error'
+        assert response.json['message'] == 'User account already activated'

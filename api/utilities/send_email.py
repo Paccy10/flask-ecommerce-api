@@ -6,13 +6,12 @@ from config.server import mail
 from .generate_token import generate_user_token
 
 
-def send_confirmation_email(user):
-    """ Send confirmation email function """
+def send_email(user, subject, template):
+    """ Send email """
 
     token = generate_user_token(user['id'])
-    msg = Message('Confirmation Email',
+    msg = Message(subject,
                   sender=('Arrows Shop', 'info.arrows2019@gmail.com'), recipients=[user['email']])
-    msg.html = render_template(
-        'confirmation_email.html', user=user, token=token)
+    msg.html = render_template(template, user=user, token=token)
 
     mail.send(msg)

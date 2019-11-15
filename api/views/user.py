@@ -10,7 +10,7 @@ from api.utilities.helpers.constants import EXCLUDED_FIELDS
 from api.utilities.helpers.responses import success_response, error_response
 from api.utilities.validators.user import UserValidators
 from api.utilities.generate_token import generate_auth_token, verify_user_token
-from api.utilities.send_email import send_confirmation_email
+from api.utilities.send_email import send_email
 from api.models.user import User
 from api.schemas.user import UserSchema
 
@@ -39,7 +39,7 @@ class UserSignupResource(Resource):
         user_schema = UserSchema(exclude=excluded)
         user_data = user_schema.dump(new_user)
 
-        send_confirmation_email(user_data)
+        send_email(user_data, 'Confirmation Email', 'confirmation_email.html')
 
         return {
             'status': 'success',
@@ -79,8 +79,6 @@ class UserLoginResource(Resource):
         """ Endpoint to login the user """
 
         request_data = request.get_json()
-        request_data = request_data_strip(request_data)
-
         email = request_data['email']
         password = bytes(request_data['password'], encoding='utf-8')
         user = User.query.filter(
@@ -107,3 +105,57 @@ class UserLoginResource(Resource):
                 return success_response, 200
             return error_response, 404
         return error_response, 404
+
+
+@user_namespace.route('/reset-password')
+class ResetRequestResource(Resource):
+    """" Resource class for user password reset request """
+
+    def post(self):
+        """ Endpoint to request password reset link """
+
+        request_data = request.get_json()
+        email = request_data['email']
+        user = User.query.filter(
+            User.email == email, User.is_activated).first()
+
+        if not user:
+            error_response['message'] = 'User not found'
+            return error_response, 404
+
+        user_schema = UserSchema()
+        send_email(user_schema.dump(user), 'Password Reset Request',
+                   'password_reset_email.html')
+
+        return {
+            'status': 'success',
+            'message': 'Request successfully submitted. Please check your email to continue.'
+        }, 200
+
+
+@user_namespace.route('/reset-password/<string:token>')
+class PasswordResetResource(Resource):
+    """" Resource class for user password reset """
+
+    def patch(self, token):
+        """ Endpoint to rest user password """
+
+        user = verify_user_token(token)
+
+        if not user:
+            error_response['message'] = 'Password reset token is invalid'
+            return error_response, 400
+
+        request_data = request.get_json()
+        UserValidators.validate_password(request_data['password'])
+        request_data = request_data_strip(request_data)
+        bytes_password = bytes(request_data['password'], encoding='utf-8')
+        hashed = bcrypt.hashpw(bytes_password, bcrypt.gensalt(10))
+        password = hashed.decode('utf-8')
+
+        user.update({'password': password})
+
+        return {
+            'status': 'success',
+            'message': 'User password successfully changed'
+        }, 200

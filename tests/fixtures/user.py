@@ -10,6 +10,18 @@ def new_user(init_db):
     return User(
         firstname='Pacifique',
         lastname='Ndayisenga',
-        email='pacifique.ndayisenga@andela.com',
+        email='pacifiqueclement@gmail.com',
         password='Password1234',
+    )
+
+
+@pytest.fixture(scope='module')
+def new_activated_user(init_db):
+    """ New user fixture """
+    return User(
+        firstname='Pacifique',
+        lastname='Ndayisenga',
+        email='pacifiqueclement10@gmail.com',
+        password='Password1234',
+        is_activated=True
     )
