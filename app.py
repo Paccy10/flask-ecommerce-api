@@ -4,7 +4,9 @@ from flask_migrate import Migrate
 from config.server import application
 from api.models.database import db
 from api.models.user import User
+from api.models.category import Category
 import api.views.user
+import api.views.category
 
 migrate = Migrate(application, db)
 

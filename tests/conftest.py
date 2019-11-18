@@ -4,7 +4,9 @@ import pytest
 from config.server import application
 from api.models.database import db
 
-pytest_plugins = ['tests.fixtures.user']
+pytest_plugins = ['tests.fixtures.user',
+                  'tests.fixtures.category',
+                  'tests.fixtures.authorization']
 
 
 @pytest.fixture(scope='module')

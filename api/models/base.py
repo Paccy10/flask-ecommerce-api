@@ -42,7 +42,7 @@ class BaseModel(db.Model):
     def find_by_id(cls, instance_id):
         """ Finds a model instance """
 
-        instance = cls.query.filter_by(id=instance_id).first()
+        instance = cls.query.filter_by(id=instance_id, deleted=False).first()
         if instance:
             return instance
         return None

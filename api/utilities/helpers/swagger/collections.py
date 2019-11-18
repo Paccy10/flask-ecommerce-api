@@ -10,3 +10,9 @@ user_namespace = api.namespace(
     description='A Collection of User related endpoints',
     path='/auth'
 )
+
+category_namespace = api.namespace(
+    'Categories',
+    description='A Collection of Category related endpoints',
+    path='/categories'
+)

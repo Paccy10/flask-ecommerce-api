@@ -16,7 +16,7 @@ authorizations = {
 
 api = Api(
     api_blueprint,
-    title='E-Commerce API',
+    title='Arrows Shop API',
     description='Online shopping API',
     security='Token Auth',
     doc='/documentation',

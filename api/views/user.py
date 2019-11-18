@@ -5,7 +5,8 @@ from flask_restplus import Resource
 import bcrypt
 from api.utilities.helpers import request_data_strip
 from api.utilities.helpers.swagger.collections import user_namespace
-from api.utilities.helpers.swagger.models import signup_model
+from api.utilities.helpers.swagger.models.user import (
+    signup_model, login_model, reset_request_model, reset_password_model)
 from api.utilities.helpers.constants import EXCLUDED_FIELDS
 from api.utilities.helpers.responses import success_response, error_response
 from api.utilities.validators.user import UserValidators
@@ -75,6 +76,7 @@ class UserActivateResource(Resource):
 class UserLoginResource(Resource):
     """" Resource class for user login endpoint """
 
+    @user_namespace.expect(login_model)
     def post(self):
         """ Endpoint to login the user """
 
@@ -82,7 +84,7 @@ class UserLoginResource(Resource):
         email = request_data['email']
         password = bytes(request_data['password'], encoding='utf-8')
         user = User.query.filter(
-            User.email == email, User.is_activated).first()
+            User.email == email, User.is_activated, User.deleted.is_(False)).first()
         error_response['message'] = 'Incorrect username or password'
         user_schema = UserSchema()
 
@@ -111,13 +113,13 @@ class UserLoginResource(Resource):
 class ResetRequestResource(Resource):
     """" Resource class for user password reset request """
 
+    @user_namespace.expect(reset_request_model)
     def post(self):
         """ Endpoint to request password reset link """
 
         request_data = request.get_json()
         email = request_data['email']
-        user = User.query.filter(
-            User.email == email, User.is_activated).first()
+        user = User.find_by_email(email)
 
         if not user:
             error_response['message'] = 'User not found'
@@ -137,6 +139,7 @@ class ResetRequestResource(Resource):
 class PasswordResetResource(Resource):
     """" Resource class for user password reset """
 
+    @user_namespace.expect(reset_password_model)
     def patch(self, token):
         """ Endpoint to rest user password """
 

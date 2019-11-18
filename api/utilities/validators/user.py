@@ -24,7 +24,7 @@ class UserValidators:
         if not re.match(email_regex, email.strip()):
             raise_validation_error('The email provided is not valid')
 
-        if User.query.filter(User.email == email.strip()).first():
+        if User.query.filter(User.email == email.strip(), User.deleted.is_(False)).first():
             raise_validation_error('The email provided already exists')
 
     @classmethod

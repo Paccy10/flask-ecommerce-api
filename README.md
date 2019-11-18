@@ -65,7 +65,7 @@ flask db upgrade
 flask run
 ```
 
-# Running tests and generating report
+## Running tests and generating report
 
 ```
 pytest
