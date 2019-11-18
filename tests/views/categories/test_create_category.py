@@ -1,6 +1,5 @@
-""" Module for testing create user endpoint """
+""" Module for testing create category endpoint """
 
-import time
 from flask import json
 from tests.mocks.category import (
     VALID_CATEGORY,

@@ -36,8 +36,7 @@ class UserSignupResource(Resource):
         new_user = User(**request_data)
         new_user.save()
 
-        excluded = EXCLUDED_FIELDS.copy()
-        user_schema = UserSchema(exclude=excluded)
+        user_schema = UserSchema(exclude=EXCLUDED_FIELDS)
         user_data = user_schema.dump(new_user)
 
         send_email(user_data, 'Confirmation Email', 'confirmation_email.html')

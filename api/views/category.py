@@ -32,8 +32,7 @@ class CategoryResource(Resource):
         new_category = Category(**request_data)
         new_category.save()
 
-        excluded = EXCLUDED_FIELDS.copy()
-        category_schema = CategorySchema(exclude=excluded)
+        category_schema = CategorySchema(exclude=EXCLUDED_FIELDS)
         category_data = category_schema.dump(new_category)
 
         success_response['message'] = 'Category successfully created'
@@ -42,3 +41,38 @@ class CategoryResource(Resource):
         }
 
         return success_response, 201
+
+    def get(self):
+        """ Endpoint to get all categories """
+
+        categories_schema = CategorySchema(many=True, exclude=EXCLUDED_FIELDS)
+        categories = categories_schema.dump(
+            Category.query.filter_by(deleted=False))
+
+        success_response['message'] = 'Categories successfully fetched'
+        success_response['data'] = {
+            'categories': categories
+        }
+
+        return success_response, 200
+
+
+@category_namespace.route('/<int:category_id>')
+class SingleCategoryResource(Resource):
+    """" Resource class for single category endpoints """
+
+    def get(self, category_id):
+        """"Endpoint to get a single category """
+
+        category_schema = CategorySchema(exclude=EXCLUDED_FIELDS)
+        category = category_schema.dump(Category.find_by_id(category_id))
+
+        if not category:
+            error_response['message'] = 'Category not found'
+            return error_response, 404
+        success_response['message'] = 'Category successfully fetched'
+        success_response['data'] = {
+            'category': category
+        }
+
+        return success_response, 200
