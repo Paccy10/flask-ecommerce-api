@@ -7,7 +7,6 @@ from api.utilities.helpers import request_data_strip
 from api.utilities.helpers.swagger.collections import user_namespace
 from api.utilities.helpers.swagger.models.user import (
     signup_model, login_model, reset_request_model, reset_password_model)
-from api.utilities.helpers.constants import EXCLUDED_FIELDS
 from api.utilities.helpers.responses import success_response, error_response
 from api.utilities.validators.user import UserValidators
 from api.utilities.generate_token import generate_auth_token, verify_user_token
@@ -36,7 +35,7 @@ class UserSignupResource(Resource):
         new_user = User(**request_data)
         new_user.save()
 
-        user_schema = UserSchema(exclude=EXCLUDED_FIELDS)
+        user_schema = UserSchema()
         user_data = user_schema.dump(new_user)
 
         send_email(user_data, 'Confirmation Email', 'confirmation_email.html')
@@ -83,7 +82,7 @@ class UserLoginResource(Resource):
         email = request_data['email']
         password = bytes(request_data['password'], encoding='utf-8')
         user = User.query.filter(
-            User.email == email, User.is_activated, User.deleted.is_(False)).first()
+            User.email == email, User.is_activated).first()
         error_response['message'] = 'Incorrect username or password'
         user_schema = UserSchema()
 
@@ -92,9 +91,7 @@ class UserLoginResource(Resource):
             hashed = bytes(user_data['password'], encoding='utf-8')
 
             if bcrypt.checkpw(password, hashed):
-                excluded = EXCLUDED_FIELDS.copy()
-                excluded.append('password')
-                user_schema = UserSchema(exclude=excluded)
+                user_schema = UserSchema(exclude=['password'])
                 logged_in_user = user_schema.dump(user)
                 token = generate_auth_token(logged_in_user)
                 success_response['message'] = 'User successfully logged in'

@@ -10,10 +10,8 @@ class BaseModel(db.Model):
     __abstract__ = True
 
     id = db.Column(db.Integer, primary_key=True)
-    deleted = db.Column(db.Boolean, default=False, nullable=True)
     created_at = db.Column(db.DateTime)
     updated_at = db.Column(db.DateTime)
-    deleted_at = db.Column(db.DateTime)
 
     def save(self):
         """ Save a model instance """
@@ -33,16 +31,14 @@ class BaseModel(db.Model):
     def delete(self):
         """ Delete a model instance """
 
-        self.deleted = True
-        self.deleted_at = datetime.datetime.utcnow()
-        db.session.add(self)
+        db.session.delete(self)
         db.session.commit()
 
     @classmethod
     def find_by_id(cls, instance_id):
         """ Finds a model instance """
 
-        instance = cls.query.filter_by(id=instance_id, deleted=False).first()
+        instance = cls.query.filter_by(id=instance_id).first()
         if instance:
             return instance
         return None

@@ -9,7 +9,6 @@ from api.middlewares.token_required import token_required
 from api.utilities.helpers.swagger.collections import category_namespace
 from api.utilities.helpers.swagger.models.category import category_model
 from api.utilities.validators.category import CategoryValidators
-from api.utilities.helpers.constants import EXCLUDED_FIELDS
 from api.utilities.helpers.responses import success_response, error_response
 from api.utilities.helpers import request_data_strip
 
@@ -32,7 +31,7 @@ class CategoryResource(Resource):
         new_category = Category(**request_data)
         new_category.save()
 
-        category_schema = CategorySchema(exclude=EXCLUDED_FIELDS)
+        category_schema = CategorySchema()
         category_data = category_schema.dump(new_category)
 
         success_response['message'] = 'Category successfully created'
@@ -45,9 +44,9 @@ class CategoryResource(Resource):
     def get(self):
         """ Endpoint to get all categories """
 
-        categories_schema = CategorySchema(many=True, exclude=EXCLUDED_FIELDS)
+        categories_schema = CategorySchema(many=True)
         categories = categories_schema.dump(
-            Category.query.filter_by(deleted=False))
+            Category.query.all())
 
         success_response['message'] = 'Categories successfully fetched'
         success_response['data'] = {
@@ -64,7 +63,7 @@ class SingleCategoryResource(Resource):
     def get(self, category_id):
         """"Endpoint to get a single category """
 
-        category_schema = CategorySchema(exclude=EXCLUDED_FIELDS)
+        category_schema = CategorySchema()
         category = category_schema.dump(Category.find_by_id(category_id))
 
         if not category:
@@ -73,6 +72,54 @@ class SingleCategoryResource(Resource):
         success_response['message'] = 'Category successfully fetched'
         success_response['data'] = {
             'category': category
+        }
+
+        return success_response, 200
+
+    @token_required
+    @permission_required
+    @category_namespace.expect(category_model)
+    def put(self, category_id):
+        """"Endpoint to get a single category """
+
+        category_schema = CategorySchema()
+        category = Category.find_by_id(category_id)
+
+        if not category:
+            error_response['message'] = 'Category not found'
+            return error_response, 404
+
+        request_data = request.get_json()
+        CategoryValidators.validate(request_data, category_id=category_id)
+        request_data = request_data_strip(request_data)
+        request_data['name'] = request_data['name'].lower()
+
+        category.update(request_data)
+
+        success_response['message'] = 'Category successfully updated'
+        success_response['data'] = {
+            'category': category_schema.dump(category)
+        }
+
+        return success_response, 200
+
+    @token_required
+    @permission_required
+    def delete(self, category_id):
+        """"Endpoint to delete a category """
+
+        category_schema = CategorySchema()
+        category = Category.find_by_id(category_id)
+
+        if not category:
+            error_response['message'] = 'Category not found'
+            return error_response, 404
+
+        category.delete()
+
+        success_response['message'] = 'Category successfully deleted'
+        success_response['data'] = {
+            'category': category_schema.dump(category)
         }
 
         return success_response, 200

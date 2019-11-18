@@ -21,7 +21,7 @@ class User(BaseModel):
         """ Finds a user instance by email """
 
         user = cls.query.filter_by(
-            email=user_email, is_activated=True, deleted=False,).first()
+            email=user_email, is_activated=True).first()
         if user:
             return user
         return None

@@ -12,3 +12,13 @@ def new_category(init_db):
         name='laptops',
         description='Personal portable computers'
     )
+
+
+@pytest.fixture(scope='module')
+def another_category(init_db):
+    """ New category fixture """
+
+    return Category(
+        name='cars',
+        description='Driving cars'
+    )
