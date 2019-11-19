@@ -62,7 +62,7 @@ class SingleBrandResource(Resource):
     """" Resource class for single brand endpoints """
 
     def get(self, brand_id):
-        """"Endpoint to get a single brand """
+        """" Endpoint to get a single brand """
 
         brand_schema = BrandSchema()
         brand = brand_schema.dump(Brand.find_by_id(brand_id))
@@ -78,50 +78,50 @@ class SingleBrandResource(Resource):
 
         return success_response, 200
 
-#     @token_required
-#     @permission_required
-#     @category_namespace.expect(category_model)
-#     def put(self, category_id):
-#         """"Endpoint to get a single category """
+    @token_required
+    @permission_required
+    @brand_namespace.expect(brand_model)
+    def put(self, brand_id):
+        """" Endpoint to update brand """
 
-#         category_schema = CategorySchema()
-#         category = Category.find_by_id(category_id)
+        brand_schema = BrandSchema()
+        brand = Brand.find_by_id(brand_id)
 
-#         if not category:
-#             error_response['message'] = 'Category not found'
-#             return error_response, 404
+        if not brand:
+            error_response['message'] = 'Brand not found'
+            return error_response, 404
 
-#         request_data = request.get_json()
-#         CategoryValidators.validate(request_data, category_id=category_id)
-#         request_data = request_data_strip(request_data)
-#         request_data['name'] = request_data['name'].lower()
+        request_data = request.get_json()
+        BrandValidators.validate(request_data, brand_id=brand_id)
+        request_data = request_data_strip(request_data)
+        request_data['name'] = request_data['name'].lower()
 
-#         category.update(request_data)
+        brand.update(request_data)
 
-#         success_response['message'] = 'Category successfully updated'
-#         success_response['data'] = {
-#             'category': category_schema.dump(category)
-#         }
+        success_response['message'] = 'Brand successfully updated'
+        success_response['data'] = {
+            'brand': brand_schema.dump(brand)
+        }
 
-#         return success_response, 200
+        return success_response, 200
 
-#     @token_required
-#     @permission_required
-#     def delete(self, category_id):
-#         """"Endpoint to delete a category """
+    @token_required
+    @permission_required
+    def delete(self, brand_id):
+        """" Endpoint to delete a brand """
 
-#         category_schema = CategorySchema()
-#         category = Category.find_by_id(category_id)
+        brand_schema = BrandSchema()
+        brand = Brand.find_by_id(brand_id)
 
-#         if not category:
-#             error_response['message'] = 'Category not found'
-#             return error_response, 404
+        if not brand:
+            error_response['message'] = 'Brand not found'
+            return error_response, 404
 
-#         category.delete()
+        brand.delete()
 
-#         success_response['message'] = 'Category successfully deleted'
-#         success_response['data'] = {
-#             'category': category_schema.dump(category)
-#         }
+        success_response['message'] = 'Brand successfully deleted'
+        success_response['data'] = {
+            'brand': brand_schema.dump(brand)
+        }
 
-#         return success_response, 200
+        return success_response, 200

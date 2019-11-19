@@ -61,7 +61,7 @@ class SingleCategoryResource(Resource):
     """" Resource class for single category endpoints """
 
     def get(self, category_id):
-        """"Endpoint to get a single category """
+        """" Endpoint to get a single category """
 
         category_schema = CategorySchema()
         category = category_schema.dump(Category.find_by_id(category_id))
@@ -80,7 +80,7 @@ class SingleCategoryResource(Resource):
     @permission_required
     @category_namespace.expect(category_model)
     def put(self, category_id):
-        """"Endpoint to get a single category """
+        """" Endpoint to update category """
 
         category_schema = CategorySchema()
         category = Category.find_by_id(category_id)
@@ -106,7 +106,7 @@ class SingleCategoryResource(Resource):
     @token_required
     @permission_required
     def delete(self, category_id):
-        """"Endpoint to delete a category """
+        """" Endpoint to delete a category """
 
         category_schema = CategorySchema()
         category = Category.find_by_id(category_id)
