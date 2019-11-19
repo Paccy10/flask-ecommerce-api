@@ -27,7 +27,7 @@ class TestCreateCategoryEndpoint:
         assert 'category' in response.json['data']
         assert response.json['data']['category']['name'] == VALID_CATEGORY['name']
 
-    def test_create_category__without_auth_token_fails(self, client, init_db):
+    def test_create_category_without_auth_token_fails(self, client, init_db):
         """ Testing create category without auth token """
 
         category_data = json.dumps(VALID_CATEGORY)
@@ -39,7 +39,7 @@ class TestCreateCategoryEndpoint:
         assert response.json['status'] == 'error'
         assert response.json['message'] == message
 
-    def test_create_category__with_invalid_token_fails(self, client, init_db):
+    def test_create_category_with_invalid_token_fails(self, client, init_db):
         """ Testing create category with invalid token """
 
         category_data = json.dumps(VALID_CATEGORY)
@@ -55,7 +55,7 @@ class TestCreateCategoryEndpoint:
         assert response.json['status'] == 'error'
         assert response.json['message'] == message
 
-    def test_create_category__with_non_admin_user_fails(self, client, init_db, user_auth_header):
+    def test_create_category_with_non_admin_user_fails(self, client, init_db, user_auth_header):
         """ Testing create category with a non admin user """
 
         category_data = json.dumps(VALID_CATEGORY)
@@ -67,7 +67,7 @@ class TestCreateCategoryEndpoint:
         assert response.json['status'] == 'error'
         assert response.json['message'] == message
 
-    def test_create_category__without_name_fails(self, client, init_db, admin_auth_header):
+    def test_create_category_without_name_fails(self, client, init_db, admin_auth_header):
         """ Testing create category without category name """
 
         category_data = json.dumps(INVALID_CATEGORY_WITHOUT_NAME)
@@ -79,10 +79,10 @@ class TestCreateCategoryEndpoint:
         assert response.json['status'] == 'error'
         assert response.json['message'] == message
 
-    def test_create_category__with_existing_name_fails(self,
-                                                       client,
-                                                       init_db, admin_auth_header,
-                                                       new_category):
+    def test_create_category_with_existing_name_fails(self,
+                                                      client,
+                                                      init_db, admin_auth_header,
+                                                      new_category):
         """ Testing create category with existing category name """
 
         new_category.save()
@@ -95,9 +95,9 @@ class TestCreateCategoryEndpoint:
         assert response.json['status'] == 'error'
         assert response.json['message'] == message
 
-    def test_create_category__with_invalid_parent_id_fails(self,
-                                                           client,
-                                                           init_db, admin_auth_header):
+    def test_create_category_with_invalid_parent_id_fails(self,
+                                                          client,
+                                                          init_db, admin_auth_header):
         """ Testing create category with unexisting parent ID """
 
         category_data = json.dumps(INVALID_CATEGORY_WITH_UNEXISTING_PARENT_ID)

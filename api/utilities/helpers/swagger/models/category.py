@@ -3,8 +3,8 @@
 from flask_restplus import fields
 from ..collections import (category_namespace)
 
-category_model = category_namespace.model('Signup', {
+category_model = category_namespace.model('Category', {
     'name': fields.String(required=True, description='Category name'),
-    'description': fields.String(required=True, description='Category description'),
-    'parent_id': fields.String(required=True, description='Category parent ID'),
+    'description': fields.String(required=False, description='Category description'),
+    'parent_id': fields.String(required=False, description='Category parent ID'),
 })

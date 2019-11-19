@@ -5,8 +5,10 @@ from config.server import application
 from api.models.database import db
 from api.models.user import User
 from api.models.category import Category
+from api.models.brand import Brand
 import api.views.user
 import api.views.category
+import api.views.brand
 
 migrate = Migrate(application, db)
 

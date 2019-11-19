@@ -16,7 +16,7 @@ def new_category(init_db):
 
 @pytest.fixture(scope='module')
 def another_category(init_db):
-    """ New category fixture """
+    """ Another category fixture """
 
     return Category(
         name='cars',

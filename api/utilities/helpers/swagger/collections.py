@@ -16,3 +16,9 @@ category_namespace = api.namespace(
     description='A Collection of Category related endpoints',
     path='/categories'
 )
+
+brand_namespace = api.namespace(
+    'Brands',
+    description='A Collection of Brand related endpoints',
+    path='/brands'
+)
