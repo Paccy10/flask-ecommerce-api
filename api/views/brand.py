@@ -42,40 +42,41 @@ class BrandResource(Resource):
 
         return success_response, 201
 
-#     def get(self):
-#         """ Endpoint to get all categories """
+    def get(self):
+        """ Endpoint to get all brands """
 
-#         categories_schema = CategorySchema(many=True)
-#         categories = categories_schema.dump(
-#             Category.query.all())
+        brands_schema = BrandSchema(many=True)
+        brands = brands_schema.dump(
+            Brand.query.all())
 
-#         success_response['message'] = 'Categories successfully fetched'
-#         success_response['data'] = {
-#             'categories': categories
-#         }
+        success_response['message'] = 'Brands successfully fetched'
+        success_response['data'] = {
+            'brands': brands
+        }
 
-#         return success_response, 200
+        return success_response, 200
 
 
-# @category_namespace.route('/<int:category_id>')
-# class SingleCategoryResource(Resource):
-#     """" Resource class for single category endpoints """
+@brand_namespace.route('/<int:brand_id>')
+class SingleBrandResource(Resource):
+    """" Resource class for single brand endpoints """
 
-#     def get(self, category_id):
-#         """"Endpoint to get a single category """
+    def get(self, brand_id):
+        """"Endpoint to get a single brand """
 
-#         category_schema = CategorySchema()
-#         category = category_schema.dump(Category.find_by_id(category_id))
+        brand_schema = BrandSchema()
+        brand = brand_schema.dump(Brand.find_by_id(brand_id))
 
-#         if not category:
-#             error_response['message'] = 'Category not found'
-#             return error_response, 404
-#         success_response['message'] = 'Category successfully fetched'
-#         success_response['data'] = {
-#             'category': category
-#         }
+        if not brand:
+            error_response['message'] = 'Brand not found'
+            return error_response, 404
 
-#         return success_response, 200
+        success_response['message'] = 'Brand successfully fetched'
+        success_response['data'] = {
+            'brand': brand
+        }
+
+        return success_response, 200
 
 #     @token_required
 #     @permission_required
