@@ -6,9 +6,11 @@ from api.models.database import db
 from api.models.user import User
 from api.models.category import Category
 from api.models.brand import Brand
+from api.models.product import Product
 import api.views.user
 import api.views.category
 import api.views.brand
+import api.views.product
 
 migrate = Migrate(application, db)
 

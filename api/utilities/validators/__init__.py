@@ -21,16 +21,17 @@ def raise_validation_error(message):
     raise error
 
 
-# def is_empty(string):
-#     """
-#     Checks if the provided field is empty
+def is_positive_integer(value):
+    """
+    Checks if the provided value is a positive integer
 
-#     Args:
-#         string (str): string to validate
-#     Raises:
-#         (ValidationError): raise an exception for each field that is empty
-#     """
+    Args:
+        value (int): value to validate
+    Raises:
+        (ValidationError): raise an exception if the provided value is not a positive integer
+    """
 
-#     for field in fields:
-#         if not field or not field.strip():
-#             raise_validation_error(f'The {field} is required')
+    if isinstance(value, int) and value > 0:
+        return True
+    else:
+        return False

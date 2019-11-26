@@ -7,7 +7,8 @@ from api.models.database import db
 pytest_plugins = ['tests.fixtures.user',
                   'tests.fixtures.category',
                   'tests.fixtures.authorization',
-                  'tests.fixtures.brand']
+                  'tests.fixtures.brand',
+                  'tests.fixtures.product']
 
 
 @pytest.fixture(scope='module')
@@ -18,7 +19,7 @@ def app():
 
 
 @pytest.fixture(scope='module')
-def init_db():
+def init_db(app):
     """ Initialize the test database """
 
     db.drop_all()

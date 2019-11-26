@@ -7,9 +7,9 @@ from .base import BaseSchema
 class UserSchema(BaseSchema):
     """ User Schema Class """
 
-    firstname = fields.String(dump_only=True)
-    lastname = fields.String(dump_only=True)
-    email = fields.String(dump_only=True)
-    password = fields.String(dump_only=True)
-    is_admin = fields.Boolean(dump_only=True)
-    is_activated = fields.Boolean(dump_only=True)
+    firstname = fields.String(required=True)
+    lastname = fields.String(required=True)
+    email = fields.String(required=True)
+    password = fields.String(required=False)
+    is_admin = fields.Boolean(required=True)
+    is_activated = fields.Boolean(required=True)
