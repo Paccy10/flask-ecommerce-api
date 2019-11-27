@@ -6,6 +6,7 @@ from api.models.product import Product
 from api.schemas.product import ProductSchema
 from api.middlewares.permission_required import permission_required
 from api.middlewares.token_required import token_required
+from api.utilities.pagination_handler import paginate_resource
 from api.utilities.helpers.swagger.collections import product_namespace
 from api.utilities.helpers.swagger.models.product import product_model
 from api.utilities.validators.product import ProductValidators
@@ -40,41 +41,40 @@ class ProductResource(Resource):
         }
         return success_response, 201
 
+    def get(self):
+        """ Endpoint to get all products """
 
-#     def get(self):
-#         """ Endpoint to get all categories """
+        products_schema = ProductSchema(many=True)
+        data, meta = paginate_resource(Product, products_schema)
 
-#         categories_schema = CategorySchema(many=True)
-#         categories = categories_schema.dump(
-#             Category.query.all())
+        success_response['message'] = 'Products successfully fetched'
+        success_response['data'] = {
+            'products': data,
+            'meta': meta
+        }
 
-#         success_response['message'] = 'Categories successfully fetched'
-#         success_response['data'] = {
-#             'categories': categories
-#         }
-
-#         return success_response, 200
+        return success_response, 200
 
 
-# @category_namespace.route('/<int:category_id>')
-# class SingleCategoryResource(Resource):
-#     """" Resource class for single category endpoints """
+@product_namespace.route('/<int:product_id>')
+class SingleProductResource(Resource):
+    """" Resource class for single product endpoints """
 
-#     def get(self, category_id):
-#         """" Endpoint to get a single category """
+    def get(self, product_id):
+        """" Endpoint to get a single product """
 
-#         category_schema = CategorySchema()
-#         category = category_schema.dump(Category.find_by_id(category_id))
+        product_schema = ProductSchema()
+        product = product_schema.dump(Product.find_by_id(product_id))
 
-#         if not category:
-#             error_response['message'] = 'Category not found'
-#             return error_response, 404
-#         success_response['message'] = 'Category successfully fetched'
-#         success_response['data'] = {
-#             'category': category
-#         }
+        if not product:
+            error_response['message'] = 'Product not found'
+            return error_response, 404
+        success_response['message'] = 'Product successfully fetched'
+        success_response['data'] = {
+            'product': product
+        }
 
-#         return success_response, 200
+        return success_response, 200
 
 #     @token_required
 #     @permission_required
