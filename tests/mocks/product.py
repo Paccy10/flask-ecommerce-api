@@ -179,3 +179,23 @@ INVALID_PRODUCT_WITH_INVALID_QUANTITY = {
     'price': 200000,
     'quantity': '50'
 }
+
+UPDATED_VALID_PRODUCT = {
+    'name': 'iphone',
+    'main_image': {
+        'url': 'http://someimage.url',
+        'public_id': 'image_public_id'
+    },
+    'category_id': 1,
+    'brand_id': 1,
+    'price': 200000,
+    'quantity': 50
+}
+
+UPDATED_INVALID_PRODUCT_WITH_EXISTED_NAME = {
+    'name': 'iphone',
+    'category_id': 1,
+    'brand_id': 1,
+    'price': 200000,
+    'quantity': 50
+}

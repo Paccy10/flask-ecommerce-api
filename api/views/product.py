@@ -76,50 +76,50 @@ class SingleProductResource(Resource):
 
         return success_response, 200
 
-#     @token_required
-#     @permission_required
-#     @category_namespace.expect(category_model)
-#     def put(self, category_id):
-#         """" Endpoint to update category """
+    @token_required
+    @permission_required
+    @product_namespace.expect(product_model)
+    def put(self, product_id):
+        """" Endpoint to update product """
 
-#         category_schema = CategorySchema()
-#         category = Category.find_by_id(category_id)
+        product_schema = ProductSchema()
+        product = Product.find_by_id(product_id)
 
-#         if not category:
-#             error_response['message'] = 'Category not found'
-#             return error_response, 404
+        if not product:
+            error_response['message'] = 'Product not found'
+            return error_response, 404
 
-#         request_data = request.get_json()
-#         CategoryValidators.validate(request_data, category_id=category_id)
-#         request_data = request_data_strip(request_data)
-#         request_data['name'] = request_data['name'].lower()
+        request_data = request.get_json()
+        ProductValidators.validate(request_data, product_id=product_id)
+        request_data = request_data_strip(request_data)
+        request_data['name'] = request_data['name'].lower()
 
-#         category.update(request_data)
+        product.update(request_data)
 
-#         success_response['message'] = 'Category successfully updated'
-#         success_response['data'] = {
-#             'category': category_schema.dump(category)
-#         }
+        success_response['message'] = 'Product successfully updated'
+        success_response['data'] = {
+            'product': product_schema.dump(product)
+        }
 
-#         return success_response, 200
+        return success_response, 200
 
-#     @token_required
-#     @permission_required
-#     def delete(self, category_id):
-#         """" Endpoint to delete a category """
+    @token_required
+    @permission_required
+    def delete(self, product_id):
+        """" Endpoint to delete a product """
 
-#         category_schema = CategorySchema()
-#         category = Category.find_by_id(category_id)
+        product_schema = ProductSchema()
+        product = Product.find_by_id(product_id)
 
-#         if not category:
-#             error_response['message'] = 'Category not found'
-#             return error_response, 404
+        if not product:
+            error_response['message'] = 'Product not found'
+            return error_response, 404
 
-#         category.delete()
+        product.delete()
 
-#         success_response['message'] = 'Category successfully deleted'
-#         success_response['data'] = {
-#             'category': category_schema.dump(category)
-#         }
+        success_response['message'] = 'Product successfully deleted'
+        success_response['data'] = {
+            'product': product_schema.dump(product)
+        }
 
-#         return success_response, 200
+        return success_response, 200

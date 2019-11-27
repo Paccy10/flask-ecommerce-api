@@ -65,14 +65,14 @@ class ProductValidators:
         """
             validates the main image
         """
-        if image is None:
-            raise_validation_error('The product main image is required')
 
         if request.method == 'PUT':
-            if image:
+            if image is not None:
                 cls.validate_image(image)
 
         else:
+            if image is None:
+                raise_validation_error('The product main image is required')
             cls.validate_image(image)
 
     @classmethod
