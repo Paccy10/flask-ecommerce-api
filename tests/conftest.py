@@ -8,7 +8,8 @@ pytest_plugins = ['tests.fixtures.user',
                   'tests.fixtures.category',
                   'tests.fixtures.authorization',
                   'tests.fixtures.brand',
-                  'tests.fixtures.product']
+                  'tests.fixtures.product',
+                  'tests.fixtures.cart']
 
 
 @pytest.fixture(scope='module')

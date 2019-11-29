@@ -12,6 +12,7 @@ from api.utilities.validators.user import UserValidators
 from api.utilities.generate_token import generate_auth_token, verify_user_token
 from api.utilities.send_email import send_email
 from api.models.user import User
+from api.models.cart import Cart
 from api.schemas.user import UserSchema
 
 
@@ -63,6 +64,8 @@ class UserActivateResource(Resource):
             return error_response, 400
 
         user.update({'is_activated': True})
+        user_cart = Cart(user_id=user.id)
+        user_cart.save()
 
         return {
             'status': 'success',
