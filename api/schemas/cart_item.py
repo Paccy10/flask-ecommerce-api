@@ -13,6 +13,5 @@ class CartItemSchema(BaseSchema):
     excluded_fields.extend(
         ['quantity', 'brand_id', 'description', 'category_id', 'images'])
 
-    cart_id = fields.Integer(required=True)
     quantity = fields.Integer(required=True)
     product = fields.Nested(ProductSchema(exclude=excluded_fields))

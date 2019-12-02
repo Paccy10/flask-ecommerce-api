@@ -2,6 +2,7 @@
 
 import pytest
 from api.models.cart import Cart
+from api.models.cart_item import CartItem
 
 
 @pytest.fixture(scope='module')
@@ -14,11 +15,15 @@ def new_cart(init_db, new_activated_user):
     )
 
 
-# @pytest.fixture(scope='module')
-# def another_brand(init_db):
-#     """ Another brand fixture """
+@pytest.fixture(scope='module')
+def new_cart_item(init_db, new_cart, new_product):
+    """ Another brand fixture """
 
-#     return Brand(
-#         name='puma',
-#         description=''
-#     )
+    new_cart.save()
+    new_product.save()
+
+    return CartItem(
+        cart_id=new_cart.id,
+        product_id=new_product.id,
+        quantity=10
+    )

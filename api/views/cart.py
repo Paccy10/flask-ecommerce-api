@@ -71,3 +71,34 @@ class SingleCartResource(Resource):
         }
 
         return success_response, 200
+
+
+@user_namespace.route('/cart/items/<int:cart_item_id>')
+class SingleCartItemResource(Resource):
+    """" Resource class for single cart item endpoints """
+
+    @token_required
+    def delete(self, cart_item_id):
+        """" Endpoint to remove an item from the cart """
+
+        cart_schema = CartSchema(exclude=EXCLUDED_FIELDS)
+        user_id = request.decoded_token['user']['id']
+        cart = Cart.query.filter_by(user_id=user_id).first()
+        cart_item = CartItem.query.filter_by(
+            id=cart_item_id, cart_id=cart.id).first()
+
+        if not cart_item:
+            error_response['message'] = 'Cart Item not found'
+            return error_response, 404
+
+        product = Product.find_by_id(cart_item.product_id)
+        quantity = product.quantity + cart_item.quantity
+        product.update({'quantity': quantity})
+        cart_item.delete()
+
+        success_response['message'] = 'Item successfully removed from the cart'
+        success_response['data'] = {
+            'cart': cart_schema.dump(cart)
+        }
+
+        return success_response, 200
