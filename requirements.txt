@@ -32,7 +32,7 @@ psycopg2-binary==2.8.4
 py==1.8.0
 pycodestyle==2.5.0
 pycparser==2.19
-PyJWT==1.7.1
+PyJWT==2.4.0
 pylint==2.4.3
 pyparsing==2.4.5
 pyrsistent==0.15.5
